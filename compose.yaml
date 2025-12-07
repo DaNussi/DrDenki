@@ -6,10 +6,17 @@ services:
     image: selenium/node-chrome:4.38.0-20251101
     platform: linux/amd64
     shm_size: 2gb
+    deploy:
+      mode: replicated
+      replicas: 9
     depends_on:
       - selenium-hub
     environment:
       - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_VNC_NO_PASSWORD=true
+      - SE_SCREEN_WIDTH=1920
+      - SE_SCREEN_HEIGHT=1080
+      - SE_SCREEN_DEPTH=24
 
 #  edge:
 #    image: selenium/node-edge:4.38.0-20251101
@@ -20,13 +27,13 @@ services:
 #    environment:
 #      - SE_EVENT_BUS_HOST=selenium-hub
 
-  firefox:
-    image: selenium/node-firefox:4.38.0-20251101
-    shm_size: 2gb
-    depends_on:
-      - selenium-hub
-    environment:
-      - SE_EVENT_BUS_HOST=selenium-hub
+#  firefox:
+#    image: selenium/node-firefox:4.38.0-20251101
+#    shm_size: 2gb
+#    depends_on:
+#      - selenium-hub
+#    environment:
+#      - SE_EVENT_BUS_HOST=selenium-hub
 
   selenium-hub:
     image: selenium/hub:4.38.0-20251101

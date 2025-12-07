@@ -1,30 +1,30 @@
 package net.nussi.denki.bot.workflow.stage;
 
-import lombok.extern.slf4j.Slf4j;
 import net.nussi.denki.bot.workflow.step.Step;
 import net.nussi.denki.bot.workflow.task.Task;
-import net.nussi.denki.bot.workflow.workflow.WorkflowContext;
 
-@Slf4j
-public class Stage implements Task {
-    private final String name;
-    private final Step[] steps;
+import java.util.LinkedList;
+import java.util.List;
 
-    public Stage(String name, Step[] steps) {
-        this.name = name;
+public abstract class Stage<C> extends Task<C> {
+    protected final List<Step<C>> steps;
+
+    public Stage(String name, String type) {
+        super(name, type);
+        this.steps = new LinkedList<>();
+    }
+
+    public Stage(String name, String type, List<Step<C>> steps) {
+        super(name, type);
         this.steps = steps;
     }
 
-    public static StageBuilder builder(String name) {
-        return new StageBuilder(name);
+    public Stage<C> addStep(Step<C> step) {
+        steps.add(step);
+        return this;
     }
 
-    @Override
-    public void execute(WorkflowContext<?> context) {
-        log.info("Workflow \"{}\" started", name);
-        for (Step steps : steps) {
-            steps.execute(context.deeper());
-        }
-        log.info("Workflow \"{}\" finished", name);
+    public static <D> StageBuilder<D> builder(String name) {
+        return new StageBuilder<D>(name);
     }
 }

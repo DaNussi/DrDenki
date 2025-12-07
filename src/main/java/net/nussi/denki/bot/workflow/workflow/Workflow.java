@@ -1,31 +1,53 @@
 package net.nussi.denki.bot.workflow.workflow;
 
-import lombok.extern.slf4j.Slf4j;
 import net.nussi.denki.bot.workflow.stage.Stage;
+import net.nussi.denki.bot.workflow.step.Step;
 import net.nussi.denki.bot.workflow.task.Task;
+import net.nussi.denki.bot.workflow.task.TaskResult;
 
-@Slf4j
-public class Workflow<T> implements Task {
-    private final String name;
-    private final WorkflowContext<T> context;
-    private final Stage[] stages;
+import java.util.List;
+import java.util.Optional;
 
-    public Workflow(String name, WorkflowContext<T> context, Stage[] stages) {
-        this.name = name;
+public class Workflow<C> extends Task<C> {
+    private final WorkflowContext<C> context;
+    private final List<Stage<C>> stages;
+
+    public Workflow(String name, WorkflowContext<C> context, List<Stage<C>> stages) {
+        super(name, "Workflow");
         this.context = context;
         this.stages = stages;
     }
 
-    public static <D> WorkflowBuilder<D> builder(String name, D contextData) {
-        return new WorkflowBuilder<D>(name, contextData);
+    public TaskResult execute() {
+        TaskResult result;
+        try {
+            result = execute(this.context, Optional.empty());
+        } catch (Exception e) {
+            result = TaskResult.failure(e);
+        }
+        if (result instanceof TaskResult.Failure failure) {
+            failure.getException().printStackTrace();
+        }
+        return result;
     }
 
     @Override
-    public void execute(WorkflowContext<?> context) {
-        log.info("Workflow \"{}\" started", name);
-        for (Stage stage : stages) {
-            stage.execute(context.deeper());
+    protected TaskResult run(WorkflowContext<C> context) throws Exception {
+        TaskResult result = TaskResult.success();
+
+        for (Stage<C> stage : stages) {
+            if(result instanceof TaskResult.Failure) {
+                if(stage.isCleanupTask()) stage.execute(context.deeper(), Optional.of(this));
+                else continue;
+            } else {
+                result = stage.execute(context.deeper(), Optional.of(this));
+            }
         }
-        log.info("Workflow \"{}\" finished", name);
+
+        return result;
+    }
+
+    public static <D> WorkflowBuilder<D> builder(String name, D context) {
+        return new WorkflowBuilder<>(name, context);
     }
 }

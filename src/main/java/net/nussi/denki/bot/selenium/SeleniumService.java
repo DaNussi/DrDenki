@@ -1,6 +1,7 @@
 package net.nussi.denki.bot.selenium;
 
 import lombok.extern.slf4j.Slf4j;
+import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -17,15 +18,17 @@ public class SeleniumService implements InitializingBean, AutoCloseable {
     @Autowired
     private SeleniumConfig config;
 
-    private final LinkedList<WebDriver> drivers = new LinkedList<>();
+    private final LinkedList<RemoteWebDriver> drivers = new LinkedList<>();
 
-    public WebDriver getDriver() {
+    public RemoteWebDriver getDriver() {
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.setCapability("browserVersion", "142.0");
         chromeOptions.setCapability("browserName", "chrome");
         chromeOptions.setCapability("platformName", "linux");
+        chromeOptions.setCapability("se:screenResolution", "1920x1080");
+        chromeOptions.addArguments("--kiosk");
 
-        WebDriver driver = new RemoteWebDriver(config.getUrl(), chromeOptions);
+        RemoteWebDriver driver = new RemoteWebDriver(config.getUrl(), chromeOptions);
         drivers.add(driver);
         return driver;
     }
