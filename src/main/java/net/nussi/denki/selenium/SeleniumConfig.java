@@ -1,4 +1,4 @@
-package net.nussi.denki.bot.selenium;
+package net.nussi.denki.selenium;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +9,7 @@ import java.net.URL;
 
 
 @Configuration
-@ConfigurationProperties(prefix = "net.nussi.denki.quizbot.selenium")
+@ConfigurationProperties(prefix = "net.nussi.denki.selenium")
 @Getter
 @Setter
 public class SeleniumConfig {

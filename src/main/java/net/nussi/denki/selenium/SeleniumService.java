@@ -1,7 +1,6 @@
-package net.nussi.denki.bot.selenium;
+package net.nussi.denki.selenium;
 
 import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;

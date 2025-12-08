@@ -1,0 +1,24 @@
+net:
+  nussi:
+    denki:
+      login:
+        url: "https://dashboard.nussi.net"
+        username:
+          xpath: "//input[@data-path='name']"
+          timeout: 3000
+        password:
+          xpath: "//input[@data-path='password']"
+          timeout: 3000
+        submit:
+          xpath: "//button[./span[normalize-space()='Login']]"
+          timeout: 3000
+      quiz:
+        quizzes:
+          - name: "Critical Thinking"
+            url: "https://dashboard.nussi.net/denki/quizzes/critical-thinking"
+      selenium:
+        url: "http://localhost:4444"
+
+spring:
+  profiles:
+    active: private

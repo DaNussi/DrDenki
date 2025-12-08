@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
-@ConfigurationPropertiesScan(basePackages = "net.nussi.denki.quizbot")
+@ConfigurationPropertiesScan(basePackages = "net.nussi.denki")
 @SpringBootApplication
 public class DrDenkiApplication {
 
